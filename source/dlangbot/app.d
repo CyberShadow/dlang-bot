@@ -52,6 +52,7 @@ void startServer(HTTPServerSettings settings)
         .post("/codecov_hook", &codecovHook)
         .post("/buildkite_hook", &buildkiteHook)
         .post("/agent_shutdown_check", &agentShutdownCheck)
+        .get("/contributor_stats", &contributorStats)
         ;
 
     HTTPClient.setUserAgentString("dlang-bot vibe.d/"~vibeVersionString);
@@ -442,6 +443,16 @@ void agentShutdownCheck(HTTPServerRequest req, HTTPServerResponse res)
     logInfo("agentShutdownCheck hostname:%s", hostname);
     runTaskHelper(&agentShutdownCheck, hostname);
     res.writeBody("");
+}
+
+//==============================================================================
+
+void contributorStats(HTTPServerRequest req, HTTPServerResponse res)
+{
+    import vibe.http.server : render;
+
+    string[] contributors = ["Bill Gates", "Steve Jobs", "Linus Torvalds"];
+    res.render!("contributor_stats.dt", contributors);
 }
 
 //==============================================================================
